@@ -9,12 +9,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.io.Serializable;
 
+@SuppressWarnings("serial")
 public class HashTableMap<KeyType, ValueType> implements MapADT<KeyType, ValueType>, Serializable{
 	int capacity;
 	int size;
 	private LinkedList<Node<KeyType ,ValueType>>[] hashTable;
 	
 	// constrcutor;
+	@SuppressWarnings("unchecked")
 	public HashTableMap(int capacity) {
 		this.capacity = capacity;
 		// initialize linked list
@@ -24,6 +26,7 @@ public class HashTableMap<KeyType, ValueType> implements MapADT<KeyType, ValueTy
 		}
 	}
 	// constructor:
+	@SuppressWarnings("unchecked")
 	public HashTableMap() {
 		this.capacity = 10; // with default capacity = 10
 		// initialize linked list
@@ -75,6 +78,16 @@ public class HashTableMap<KeyType, ValueType> implements MapADT<KeyType, ValueTy
 		return values;
 	}
 	
+	// keys function
+	public List<KeyType> keys(){
+		List<KeyType> keys = new ArrayList<KeyType>();
+		// loop through array
+		for (LinkedList<Node<KeyType ,ValueType>> list:hashTable ) {
+				keys.add(list.get(0).key);
+		}
+		return keys;
+	}
+	
 	// contains function
 	public boolean containsKey(KeyType key) 
 	{
@@ -95,6 +108,7 @@ public class HashTableMap<KeyType, ValueType> implements MapADT<KeyType, ValueTy
 	}
 	
 	// put function
+	@SuppressWarnings("unchecked")
 	public boolean put(KeyType key, ValueType value) 
 	{
 		// System.out.println("Add new node:");
@@ -103,6 +117,7 @@ public class HashTableMap<KeyType, ValueType> implements MapADT<KeyType, ValueTy
 			return false;
 		}
 		int hash_index = computeHash(key); // compute the hashCode
+		@SuppressWarnings("rawtypes")
 		Node<KeyType, ValueType> toAdd = new Node(key, value);
 		// if it is empty, add a node
 		if (hashTable[hash_index].isEmpty()) 
@@ -134,7 +149,8 @@ public class HashTableMap<KeyType, ValueType> implements MapADT<KeyType, ValueTy
 			LinkedList<Node<KeyType, ValueType>>[] temp = hashTable;
 			// re-initialize
 			capacity = 2 * capacity; 
-			hashTable = new LinkedList[capacity];
+			@SuppressWarnings("rawtypes")
+			LinkedList<Node<KeyType, ValueType>>[] hashTable = (LinkedList<Node<KeyType, ValueType>>[]) new LinkedList[capacity];
 			for (int i = 0; i<capacity; i++) 
 			{
 				hashTable[i] = new LinkedList<Node<KeyType ,ValueType>>();
@@ -196,14 +212,14 @@ public class HashTableMap<KeyType, ValueType> implements MapADT<KeyType, ValueTy
 }
 
 // A node class
-class Node<K, V> implements Serializable
-{
-	K key;
-	V value;
-	
-	public Node(K key, V value) 
-	{
-		this.key = key;
-		this.value = value;
-	}
-}
+//class Node<K, V> implements Serializable
+//{
+//	K key;
+//	V value;
+//	
+//	public Node(K key, V value) 
+//	{
+//		this.key = key;
+//		this.value = value;
+//	}
+//}

@@ -11,35 +11,48 @@ import java.util.*;
 // Notes to Grader: <optional extra notes>
 
 
-public class Library implements Serializable {
+public class Library implements Serializable{
+	
+	private static final long serialVersionUID = 112398934;
 	
 	private HashTableMap<String, List<Book>> directory;
 	
 	public Library() {
-		this.directory = new HashTableMap<String, List<Book>>();
+		this.directory = new HashTableMap<String, List<Book>>(100);
 	}
 	
 	public void addBook(Book book) {
 		String genre = sanitizedString(book.getGenre()); // get the book genre: captial insensitive
 		String name = sanitizedString(book.getTitle()); // get the book name
-		
+
 		if (this.directory.containsKey(genre)) {
 			// System.out.println("The genre is already in the library!");
 			List<Book> book_list = directory.get(genre); // extract the book list object
-			book_list.add(book); // add new book record
+			// check if the book exists
+			if (book_list.contains(book)) { // book exists
+				System.out.println("Exist book record overwrite: " + book.getTitle());
+				book_list.remove(book);
+				book_list.add(book);
+			} else {
+				System.out.println("Book record added: "+ book.getTitle());
+				book_list.add(book); // add new book record
+			}
+			
 			directory.put(genre, book_list); // update the list into hashmap
 		}
 		// if there is no genre in the library
 		else {
+			System.out.println("New genre created:" + genre);
 			// create a new array list
 			List<Book> book_list = new ArrayList<>();
 			book_list.add(book);
+			System.out.println("Book record added: "+ book.getTitle());
 			directory.put(genre, book_list); // add new book list to the library
 		}
 	}
 	
 	// list all books within the genre
-	public void listGenre(String Type) {
+	public List<Book> listGenre(String Type) {
 		String genre = sanitizedString(Type); // sanitize the genre
 		List<Book> book_list = this.directory.get(genre); // retrieve book_list
 		String total = "\n";
@@ -61,6 +74,8 @@ public class Library implements Serializable {
 		System.out.println(header);
 		// print details
 		System.out.println(total);
+		
+		return book_list;
 	}
 	
 	

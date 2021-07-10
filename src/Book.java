@@ -8,6 +8,8 @@ import java.io.Serializable;
 
 public class Book implements Serializable, Comparable<Book>{
 	
+	private static final long serialVersionUID = 1122334534;
+	
 	private String title;
 	private String author;
 	private String genre;
@@ -104,5 +106,47 @@ public class Book implements Serializable, Comparable<Book>{
 		else
 			return -1;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		if (obj == null) {
+			return false;
+		}
+		
+		if (obj.getClass() != this.getClass()) { // if the object is not book object, return false
+			return false;
+		}
+		
+		Book obj_case = (Book) obj;
+		
+		String title1 = sanitizedString(this.getTitle());
+		String title2 = sanitizedString(obj_case.getTitle());
+		
+		// compare if the two title is the same
+		if (!title1.equals(title2)) {
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
+	
+	
+	// change string to lower case
+	public static String sanitizedString(String string) {
+		if (string == null) {
+			return "";
+		}
+		string = string.toLowerCase(); // change to lower case
+		return string.trim(); // trim space in the end
+	}
+
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return super.hashCode();
+	}
+	
 }
 

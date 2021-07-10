@@ -18,9 +18,12 @@ public class LibSystem {
 			+ "\nEnter 3 for save and quit." + "\nEnter 4 for list all books in the library."
 			+ "\nEnter 5 for search by genre." + "\nEnter 6 for add book."
 			+ "\nEnter 7 for search book by name." + "\nEnter 8 for delete book by name."
-			+ "\nEnter 9 for clean the library.");
+			+ "\nEnter 9 for clean the library." + "\nEnter 0 for quit.");
 			int answer = in.nextInt();
 			switch(answer) {
+			case 0:
+				quit();
+				break;
 			case 1:
 				// load a library
 				System.out.println("Enter filename to load");
@@ -170,6 +173,7 @@ public class LibSystem {
 	private static void saveAndQuit() {
 		System.out.println("Enter file name: ");
 		fileName = in.next();
+		System.out.println("Library was saved and closed.");
 		running = false;
 		FileOutputStream fos = null;
 		ObjectOutputStream out = null;
@@ -184,5 +188,11 @@ public class LibSystem {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	// quit
+	private static void quit() {
+		System.out.println("Library was closed.");
+		running = false;
 	}
 }

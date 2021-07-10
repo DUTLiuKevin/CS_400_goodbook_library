@@ -88,6 +88,9 @@ public class Library implements Serializable {
 			System.out.println("The book does not exist.");
 			return null;
 		} else {
+		// sort book by rating
+		Collections.sort(books, Collections.reverseOrder());
+		
 		// print the book list
 		String total = "";
 		for (Book book:books) {

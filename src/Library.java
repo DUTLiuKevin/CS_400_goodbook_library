@@ -3,6 +3,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Iterator;
 import java.io.Serializable;
+import java.util.*;
 
 // --== CS400 library class ==--
 // Name: Yuan Liu
@@ -23,7 +24,7 @@ public class Library implements Serializable {
 		String name = sanitizedString(book.getTitle()); // get the book name
 		
 		if (this.directory.containsKey(genre)) {
-			System.out.println("The genre is already in the library!");
+			// System.out.println("The genre is already in the library!");
 			List<Book> book_list = directory.get(genre); // extract the book list object
 			book_list.add(book); // add new book record
 			directory.put(genre, book_list); // update the list into hashmap
@@ -36,6 +37,32 @@ public class Library implements Serializable {
 			directory.put(genre, book_list); // add new book list to the library
 		}
 	}
+	
+	// list all books within the genre
+	public void listGenre(String Type) {
+		String genre = sanitizedString(Type); // sanitize the genre
+		List<Book> book_list = this.directory.get(genre); // retrieve book_list
+		String total = "\n";
+		// sort the list using collections.sort() method
+		// following descending order of rating
+		Collections.sort(book_list, Collections.reverseOrder());
+		int Count = 0;
+		for (Book book:book_list) {
+			total = total + book.toString();
+			// print comments for the top 5 books
+			if (Count <= 4){
+				String comment = book.getComment();
+				total = total + "Comment: " + comment + "\n";
+			}
+			Count = Count + 1;
+		}
+		// print the list header
+		String header = String.format("%-32s%-24s%-16s%-8s%-5s", "Title", "Author", "Genre", "Rating", "Price");
+		System.out.println(header);
+		// print details
+		System.out.println(total);
+	}
+	
 
 //	// get book object by its full name
 //	public Book getBook(String bookTitle) {

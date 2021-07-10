@@ -13,10 +13,10 @@ import java.util.*;
 
 public class Library implements Serializable {
 	
-	private HashMap<String, List<Book>> directory;
+	private HashTableMap<String, List<Book>> directory;
 	
 	public Library() {
-		this.directory = new HashMap<String, List<Book>>();
+		this.directory = new HashTableMap<String, List<Book>>();
 	}
 	
 	public void addBook(Book book) {
@@ -63,39 +63,72 @@ public class Library implements Serializable {
 		System.out.println(total);
 	}
 	
-
-//	// get book object by its full name
-//	public Book getBook(String bookTitle) {
-//		bookTitle = sanitizedString(bookTitle); // change the book title to lower case
-//		return this.directory.get(bookTitle); // get the book object from hashmap by its name as key
-//	}
-//	
-//	// get book object by part of its name
-//	public ArrayList<Book> getBookByPart(String titlePart){
-//		/*
-//		 * Get a list of book object that contains the part name
-//		 * params: titlePart: part of the book title
-//		 * return: a list of book object that match the name
-//		 */
-//		
-//		titlePart = sanitizedString(titlePart);
-//		
-//		ArrayList<Book> books = new ArrayList<>();
-//		
-//		for(String bookTitle : this.directory.keySet()) {
-//			if (!bookTitle.contains(titlePart)) {
-//				continue
-//			}
-//			
-//			// if the key contains the given string
-//			// we add the book object to the array list
-//			
-//			books.add(this.directory.get(bookTitle));
-//		}
-//		
-//		return books;
-//	}
-
+	
+	// get book object by part of its name
+	public ArrayList<Book> getBookByPart(String titlePart){
+		titlePart = sanitizedString(titlePart);
+		
+		ArrayList<Book> books = new ArrayList<>();
+		// loop through the table
+		for (Node<String, List<Book>> book_node : directory.values()) {
+			for (Book book_obj: book_node.value) {
+				// get the title from book object
+				String bookTitle = book_obj.getTitle();
+				bookTitle = sanitizedString(bookTitle);
+				// if the title contains the part
+				if (!bookTitle.contains(titlePart)) {
+					continue;
+				}else {
+					books.add(book_obj);
+				}
+			}
+		}
+		// see if book name exist:
+		if (books.isEmpty()){
+			System.out.println("The book does not exist.");
+			return null;
+		} else {
+		// print the book list
+		String total = "";
+		for (Book book:books) {
+			total = total + book.toString();
+		}
+		// print the list header
+		String header = String.format("%-32s%-24s%-16s%-8s%-5s", "Title", "Author", "Genre", "Rating", "Price");
+		System.out.println(header);
+		System.out.println(total);
+		return books;
+		}
+	}
+	
+	// delete book object 
+	public void delete(ArrayList<Book> book_list) {
+		
+		if (book_list == null) {
+			System.out.println("No book to delete.");
+		} else {
+			// find and remove each book object in the list
+			for (Book book: book_list) {
+				// get genre name
+				// System.out.println(book.getTitle());
+				String genre = sanitizedString(book.getGenre());
+				// locate the target linked list
+				List<Book> sub_book_list = directory.get(genre);
+				sub_book_list.remove(book);
+				// update the list to hashtable
+				directory.put(genre, sub_book_list);
+				System.out.println("Book: " + book.getTitle() + " has been deleted.");
+			}
+		}
+		
+	}
+	
+	// clean the library
+	public void clean() {
+		// clear the directory
+		directory.clear();
+		System.out.println("The library was cleaned.");
+	}
 	
 	// change string to lower case
 	public static String sanitizedString(String string) {
@@ -108,12 +141,12 @@ public class Library implements Serializable {
 	
 	@Override
 	public String toString() {
-		String total = "\n";
+		String total = "";
 		
 		// look through values 
-		for (List<Book> list : directory.values()) {
+		for (Node<String, List<Book>> node : directory.values()) {
 			// look thourgh list
-			for (Book book : list) {
+			for (Book book : node.value) {
 				total = total + book.toString();
 			}
 		}
